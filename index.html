@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>My Web Page</title>
+
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+
+  <style>
+    /* Sidebar styles */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 200px;
+      background-color: #f8f8f8;
+      border-right: 1px solid #ccc;
+      overflow-y: auto;
+    }
+
+    .menu {
+      margin-top: 20px;
+      padding-left: 20px;
+    }
+
+    .menu li {
+      margin-bottom: 10px;
+    }
+
+    .menu a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .menu i {
+      margin-right: 10px;
+    }
+
+    /* Content styles */
+    .content {
+      margin-left: 200px;
+      padding: 20px;
+    }
+
+    .section {
+      margin-top: 30px;
+      display: block;
+    }
+
+    /* Search styles */
+    .search {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .search input {
+      width: 100%;
+      padding: 10px 30px 10px 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-image: url('path/to/magnifying-glass-icon.png');
+      background-position: 95% center;
+      background-repeat: no-repeat;
+      background-size: 20px;
+    }
+  </style>
+  <script>
+    function loadContent(url) {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        document.querySelector('.content').innerHTML = xhr.response;
+      }
+      xhr.open('GET', url, true);
+      xhr.send();
+    }
+
+    window.onload = function() {
+      const menuLinks = document.querySelectorAll('.menu a');
+      menuLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          const url = this.getAttribute('href');
+          loadContent(url);
+        });
+      });
+
+      const searchInput = document.querySelector('.search input');
+      const sections = document.querySelectorAll('.section');
+
+      searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+        sections.forEach(section => {
+          const text = section.textContent.toLowerCase();
+          const sectionId = section.getAttribute('id');
+          const sectionLink = document.querySelector(`[href="#${sectionId}"]`);
+          if (text.includes(searchTerm)) {
+            section.style.display = 'block';
+            sectionLink.style.color = '#333';
+          } else {
+            section.style.display = 'none';
+            sectionLink.style.color = '#999';
+          }
+        });
+      });
+    }
+  </script>
+</head>
+<body>
+  <div class="sidebar">
+    
+    <ul class="menu">
+      <li><a href="page1.html"><i class="fas fa-home"></i> Home</a></li>
+      <li><a href="page2.html"><i class="fas fa-user"></i> About</a></li>
+      <li><a href="page3.html"><i class="fas fa-file"></i>Contact</a></li>
+<li><a href="page4.html"><i class="fas fa-envelope"></i> Feedback</a></li>
+</ul>
+
+  </div>
+  <div class="content">
+  	<div class="search">
+      <input type="text" placeholder="Search...">
+    </div>
+    <!-- Content will be loaded dynamically here -->
+  </div>
+</body>
+</html>
