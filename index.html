@@ -2,129 +2,66 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>My Web Page</title>
-
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
-
+  <title>Pomodoro Timer</title>
   <style>
-    /* Sidebar styles */
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      width: 200px;
-      background-color: #f8f8f8;
-      border-right: 1px solid #ccc;
-      overflow-y: auto;
+    body {
+      font-family: sans-serif;
+      text-align: center;
     }
-
-    .menu {
+    h1 {
+      font-size: 3em;
+    }
+    #timer {
+      font-size: 5em;
+    }
+    button {
+      font-size: 2em;
       margin-top: 20px;
-      padding-left: 20px;
-    }
-
-    .menu li {
-      margin-bottom: 10px;
-    }
-
-    .menu a {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-      color: #333;
-    }
-
-    .menu i {
-      margin-right: 10px;
-    }
-
-    /* Content styles */
-    .content {
-      margin-left: 200px;
-      padding: 20px;
-    }
-
-    .section {
-      margin-top: 30px;
-      display: block;
-    }
-
-    /* Search styles */
-    .search {
-      position: relative;
-      margin-bottom: 20px;
-    }
-
-    .search input {
-      width: 100%;
-      padding: 10px 30px 10px 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
       border-radius: 5px;
-      background-image: url('path/to/magnifying-glass-icon.png');
-      background-position: 95% center;
-      background-repeat: no-repeat;
-      background-size: 20px;
+      cursor: pointer;
     }
   </style>
-  <script>
-    function loadContent(url) {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        document.querySelector('.content').innerHTML = xhr.response;
-      }
-      xhr.open('GET', url, true);
-      xhr.send();
-    }
-
-    window.onload = function() {
-      const menuLinks = document.querySelectorAll('.menu a');
-      menuLinks.forEach(link => {
-        link.addEventListener('click', function(event) {
-          event.preventDefault();
-          const url = this.getAttribute('href');
-          loadContent(url);
-        });
-      });
-
-      const searchInput = document.querySelector('.search input');
-      const sections = document.querySelectorAll('.section');
-
-      searchInput.addEventListener('input', () => {
-        const searchTerm = searchInput.value.toLowerCase();
-        sections.forEach(section => {
-          const text = section.textContent.toLowerCase();
-          const sectionId = section.getAttribute('id');
-          const sectionLink = document.querySelector(`[href="#${sectionId}"]`);
-          if (text.includes(searchTerm)) {
-            section.style.display = 'block';
-            sectionLink.style.color = '#333';
-          } else {
-            section.style.display = 'none';
-            sectionLink.style.color = '#999';
-          }
-        });
-      });
-    }
-  </script>
 </head>
 <body>
-  <div class="sidebar">
-    
-    <ul class="menu">
-      <li><a href="page1.html"><i class="fas fa-home"></i> Home</a></li>
-      <li><a href="page2.html"><i class="fas fa-user"></i> About</a></li>
-      <li><a href="page3.html"><i class="fas fa-file"></i>Contact</a></li>
-<li><a href="page4.html"><i class="fas fa-envelope"></i> Feedback</a></li>
-</ul>
+  <h1>Pomodoro Timer</h1>
+  <div id="timer">25:00</div>
+  <button id="start">Start</button>
+  <button id="stop">Stop</button>
+  <script>
+    let timerInterval = null;
+    const timerElement = document.getElementById('timer');
+    const startButton = document.getElementById('start');
+    const stopButton = document.getElementById('stop');
+    let timeRemaining = 25 * 60; // 25 minutes in seconds
 
-  </div>
-  <div class="content">
-  	<div class="search">
-      <input type="text" placeholder="Search...">
-    </div>
-    <!-- Content will be loaded dynamically here -->
-  </div>
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        timerElement.innerHTML = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        timeRemaining--;
+        if (timeRemaining < 0) {
+          stopTimer();
+        }
+      }, 1000);
+      startButton.disabled = true;
+      stopButton.disabled = false;
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      timerElement.innerHTML = '25:00';
+      startButton.disabled = false;
+      stopButton.disabled = true;
+    }
+
+    startButton.addEventListener('click', startTimer);
+    stopButton.addEventListener('click', stopTimer);
+  </script>
 </body>
 </html>
